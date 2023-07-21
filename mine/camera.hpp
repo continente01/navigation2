@@ -1,5 +1,5 @@
-#ifndef NAV2_AMCL__SENSORS__LASER__LASER_HPP_
-#define NAV2_AMCL__SENSORS__LASER__LASER_HPP_
+#ifndef NAV2_AMCL__SENSORS__CAMERA__CAMERA_HPP_
+#define NAV2_AMCL__SENSORS__CAMERA__CAMERA_HPP_
 
 #include <string>
 #include "nav2_amcl/pf/pf.hpp"
@@ -18,27 +18,27 @@ public:
   Camera(map_t * map);
 
   /*
-   * @brief Laser destructor
+   * @brief Camera destructor
    */
   virtual ~Camera();
 
   /*
-   * @brief Run a sensor update on laser
+   * @brief Run a sensor update on camera
    * @param pf Particle filter to use
-   * @param data Laser data to use
+   * @param data camera data to use
    * @return if it was succesful
    */
-  virtual bool sensorUpdate(pf_t * pf, LaserData * data) = 0;
+  virtual bool sensorUpdate(pf_t * pf, CameraData * data) = 0;
 
   /*
-   * @brief Set the laser pose from an update
-   * @param laser_pose Pose of the laser
+   * @brief Set the camera  pose from an update
+   * @param camera _pose Pose of the camera 
    */
-  void SetLaserPose(pf_vector_t & laser_pose);
+  void SetCameraPose(pf_vector_t & camera_pose);
 
 protected:
-
-  double z_hit_;    //GUARDA A COSA SERVE
+  //nel dubbio metti tutto public poi si vede
+  double z_hit_;    //GUARDA A COSA SERVE vanno cambiati a seconda di quello che serve per la camera
   double z_rand_;
   double sigma_hit_;
 
@@ -54,8 +54,47 @@ protected:
   int max_samples_;
   int max_obs_;
   double ** temp_obs_;
-}
+};
 
+class CameraData
+{
+public:
+  Camera * camera;
 
+  /*
+   * @brief CameraData constructor
+   */
+  CameraData() {ranges = NULL;}
+  /*
+   * @brief CameraData destructor
+   */
+  virtual ~CameraData() {delete[] ranges;}
 
+public:
+  int range_count;
+  double range_max;
+  double(*ranges)[2];
+};
+
+class QrModel : public Camera   //                           **SICURAMENTE DA TOGLIERE O MODIFICARE, CONTROLLA DOVE USATO**
+{
+public:
+  /*
+   * @brief QrModel constructor
+   */
+  QrModel(
+    map_t * map); //da aggiungere parametri a seconda di quelli necessari
+
+  /*
+   * @brief Run a sensor update on Camera
+   * @param pf Particle filter to use
+   * @param data Camera data to use
+   * @return if it was succesful
+   */
+  bool sensorUpdate(pf_t * pf, CameraData * data);
+
+private:
+  //ci sono dei parametri in più, da decidere e poi scegliere se metterli private o public
+  static double sensorFunction(CameraData * data, pf_sample_set_t * set);
+};
 }

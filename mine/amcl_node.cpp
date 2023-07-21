@@ -61,7 +61,7 @@ using nav2_util::geometry_utils::orientationAroundZAxis;
 AmclNode::AmclNode(const rclcpp::NodeOptions & options)
 : nav2_util::LifecycleNode("amcl", "", options)
 {
-  RCLCPP_INFO(get_logger(), "Creating");
+  RCLCPP_INFO(get_logger(), "Creating"); //!!!!!!!!!! sarà necessario aggiungere parametri per la camera
 
   add_parameter(
     "alpha1", rclcpp::ParameterValue(0.2),
@@ -233,7 +233,7 @@ AmclNode::~AmclNode()
 }
 
 nav2_util::CallbackReturn
-AmclNode::on_configure(const rclcpp_lifecycle::State & /*state*/)
+AmclNode::on_configure(const rclcpp_lifecycle::State & /*state*/) //!!!!!!!!!! sarà necessario aggiungere per la camera
 {
   RCLCPP_INFO(get_logger(), "Configuring");
   callback_group_ = create_callback_group(
@@ -355,7 +355,7 @@ AmclNode::on_cleanup(const rclcpp_lifecycle::State & /*state*/)
   pf_free(pf_);
   pf_ = nullptr;
 
-  // Laser Scan
+  // Laser Scan                      //!!!!!!!!!! sarà necessario aggiungere per la camera?
   lasers_.clear();
   lasers_update_.clear();
   frame_to_laser_.clear();
@@ -605,7 +605,7 @@ AmclNode::handleInitialPose(geometry_msgs::msg::PoseWithCovarianceStamped & msg)
 }
 
 void
-AmclNode::laserReceived(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan)
+AmclNode::laserReceived(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan)  //!!!!!!!!!! sarà necessario convertirlo per la camera
 {
   std::lock_guard<std::recursive_mutex> cfl(mutex_);
 
@@ -720,7 +720,7 @@ AmclNode::laserReceived(sensor_msgs::msg::LaserScan::ConstSharedPtr laser_scan)
   }
 }
 
-bool AmclNode::addNewScanner(
+bool AmclNode::addNewScanner(    //!!!!!!!!!! sarà necessario convertirlo per la camera (non credo sia strettamente necessario)
   int & laser_index,
   const sensor_msgs::msg::LaserScan::ConstSharedPtr & laser_scan,
   const std::string & laser_scan_frame_id,
@@ -769,7 +769,7 @@ bool AmclNode::shouldUpdateFilter(const pf_vector_t pose, pf_vector_t & delta)
   return update;
 }
 
-bool AmclNode::updateFilter(
+bool AmclNode::updateFilter( //!!!!!!!!!! sarà necessario convertirlo per la camera? forse no
   const int & laser_index,
   const sensor_msgs::msg::LaserScan::ConstSharedPtr & laser_scan,
   const pf_vector_t & pose)
@@ -958,7 +958,7 @@ AmclNode::publishAmclPose(
     RCLCPP_DEBUG(get_logger(), "Publishing pose");
     last_published_pose_ = *p;
     first_pose_sent_ = true;
-    pose_pub_->publish(std::move(p));
+    pose_pub_->publish(std::move(p));                                        //!!!!!!!!!pose publish
   } else {
     RCLCPP_WARN(
       get_logger(), "AMCL covariance or pose is NaN, likely due to an invalid "
@@ -1490,7 +1490,7 @@ AmclNode::initTransforms()
 }
 
 void
-AmclNode::initMessageFilters()
+AmclNode::initMessageFilters()                   //!!!!!!!!!! sarà necessario convertirlo per la camera (credo)
 {
   auto sub_opt = rclcpp::SubscriptionOptions();
   sub_opt.callback_group = callback_group_;
@@ -1603,7 +1603,7 @@ AmclNode::initParticleFilter()
 }
 
 void
-AmclNode::initLaserScan()
+AmclNode::initLaserScan()           //!!!!!!!!!! sarà necessario convertirlo per la camera
 {
   scan_error_count_ = 0;
   last_laser_received_ts_ = rclcpp::Time(0);
