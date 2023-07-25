@@ -47,7 +47,7 @@ AmclNode::qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_det
 
   // Where was the robot when this scan was taken?
   pf_vector_t pose;
-  if (!getOdomPose(
+  if (!getOdomPose( //non da cambiare
       latest_odom_pose_, pose.v[0], pose.v[1], pose.v[2],
       qr_detection->header.stamp, base_frame_id_))
   {
@@ -91,7 +91,7 @@ AmclNode::qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_det
 
     // Resample the particles
     if (!(++resample_count_ % resample_interval_)) {
-      pf_update_resample(pf_, reinterpret_cast<void *>(map_));
+      pf_update_resample(pf_, reinterpret_cast<void *>(map_)); //non da modificare
       resampled = true;
     }
 
