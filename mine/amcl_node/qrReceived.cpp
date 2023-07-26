@@ -15,6 +15,7 @@ void qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_detectio
 void
 AmclNode::qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_detection)
 {
+  std::lock_guard<std::recursive_mutex> cfl(mutex_);
   // Since the sensor data is continually being published by the simulator or robot,
   // we don't want our callbacks to fire until we're in the active state
   if (!active_) {return;}
@@ -27,23 +28,6 @@ AmclNode::qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_det
   }
   std::string qr_detection_frame_id = nav2_util::strip_leading_slash(qr_detection->header.frame_id);
   last_qr_received_ts_ = now();
-
-  //int qr_index = -1; //serve nel caso un nuovo venga ricevuto nelle callback(?)
-  //allora non so, lo usa quando non conosco la trasformata, quindi da valutare se necessario
-  //geometry_msgs::msg::PoseStamped laser_pose;
-
-  // Do we have the base->base_laser Tx yet?
-  //frame to laser è una mappa che al frame id assegna un laser index. non credo a me serva
-  //dato che ho un solo frame di un'unica camera. diciamo gestisce l'aggiunta di nuove
-  
-  // if (frame_to_laser_.find(laser_scan_frame_id) == frame_to_laser_.end()) {
-  //   if (!addNewScanner(laser_index, laser_scan, laser_scan_frame_id, laser_pose)) {
-  //     return;  // could not find transform
-  //   }
-  // } else {
-  //   // we have the laser pose, retrieve laser index
-  //   laser_index = frame_to_laser_[laser_scan->header.frame_id];
-  // }
 
   // Where was the robot when this scan was taken?
   pf_vector_t pose;
@@ -60,26 +44,17 @@ AmclNode::qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_det
   if (!pf_init_) {
     // Pose at last filter update
     pf_odom_pose_ = pose;
+
     pf_init_ = true;
-
-    // for (unsigned int i = 0; i < lasers_update_.size(); i++) {
-    //   lasers_update_[i] = true;
-    // }
     camera_update_ =true;
-
     force_publication = true;
     resample_count_ = 0;
   }
   else {
     // Set the laser update flags
     if (shouldUpdateFilter(pose, delta)) { //non da cambiare
-      // for (unsigned int i = 0; i < lasers_update_.size(); i++) {
-      //   lasers_update_[i] = true;
-      // }
       camera_update_ =true;
-    }
-    if (camera_update_) {
-      motion_model_->odometryUpdate(pf_, pose, delta);
+      motion_model_->odometryUpdate(pf_, pose, delta);// essendo singola la camera si può rimuovere il doppio if
     }
     force_update_ = false;
   }

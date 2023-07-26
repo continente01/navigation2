@@ -59,21 +59,19 @@ protected:
 class CameraData
 {
 public:
-  Camera * camera;
+  //Camera * camera;  //essendoi una sola camera non dovrebbe essere necessario
 
   /*
    * @brief CameraData constructor
    */
-  CameraData() {ranges = NULL;}
+  CameraData() {qr_position=NULL;}
   /*
    * @brief CameraData destructor
    */
-  virtual ~CameraData() {delete[] ranges;}
+  virtual ~CameraData() {delete qr_position}
 
 public:
-  int range_count;
-  double range_max;
-  double(*ranges)[2];
+  geometry_msgs::msg::Transform qr_position;
 };
 
 class QrModel : public Camera   //                           **SICURAMENTE DA TOGLIERE O MODIFICARE, CONTROLLA DOVE USATO**
@@ -83,7 +81,8 @@ public:
    * @brief QrModel constructor
    */
   QrModel(
-    map_t * map); //da aggiungere parametri a seconda di quelli necessari
+    double z_hit, double z_short, double z_max, double z_rand, double sigma_hit,
+    double lambda_short, double chi_outlier, size_t max_beams, map_t * map); //da aggiungere parametri a seconda di quelli necessari
 
   /*
    * @brief Run a sensor update on Camera
@@ -94,7 +93,10 @@ public:
   bool sensorUpdate(pf_t * pf, CameraData * data);
 
 private:
-  //ci sono dei parametri in più, da decidere e poi scegliere se metterli private o public
   static double sensorFunction(CameraData * data, pf_sample_set_t * set);
+  double z_short_;
+  double z_max_;
+  double lambda_short_;
+  double chi_outlier_;
 };
 }
