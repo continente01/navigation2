@@ -15,7 +15,7 @@ bool AmclNode::updateFilter(
   const pf_vector_t & pose)
 {
   nav2_amcl::CameraData cdata;
-  cdata.qr_position=qr_detection;
+  cdata.camera_to_qr_transform=qr_detection;
   //cdata.camera = camera_index; //non necessario teoricamente
 
   //conversione frame qr -> camera -> base -> (mappa?)

@@ -64,14 +64,14 @@ public:
   /*
    * @brief CameraData constructor
    */
-  CameraData() {qr_position=NULL;}
+  CameraData() {camera_to_qr_transform=NULL;}
   /*
    * @brief CameraData destructor
    */
-  virtual ~CameraData() {delete qr_position}
+  virtual ~CameraData() {delete camera_to_qr_transform}
 
 public:
-  geometry_msgs::msg::Transform qr_position;
+  geometry_msgs::msg::Transform camera_to_qr_transform;
 };
 
 class QrModel : public Camera   //                           **SICURAMENTE DA TOGLIERE O MODIFICARE, CONTROLLA DOVE USATO**
