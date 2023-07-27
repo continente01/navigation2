@@ -41,20 +41,20 @@ AmclNode::qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_det
 
   pf_vector_t delta = pf_vector_zero();
   bool force_publication = false;
-  if (!pf_init_) {
+  if (!pf_init_) {              //se il pf non è inizializzato 
     // Pose at last filter update
-    pf_odom_pose_ = pose;
+    pf_odom_pose_ = pose;       //imposto la pf_odom_pose in pose(x,y,yam ottenuta da getOdomPose)
 
     pf_init_ = true;
     camera_update_ =true;
     force_publication = true;
     resample_count_ = 0;
   }
-  else {
-    // Set the laser update flags
-    if (shouldUpdateFilter(pose, delta)) { //non da cambiare
+  else {                           //se il pf è già inizializzato
+    // Set the camera update flag
+    if (shouldUpdateFilter(pose, delta)) {  //controllo se il pf è da aggiornare, se lo è viene fatto in updateFilter
       camera_update_ =true;
-      motion_model_->odometryUpdate(pf_, pose, delta);// essendo singola la camera si può rimuovere il doppio if
+      motion_model_->odometryUpdate(pf_, pose, delta);// 
     }
     force_update_ = false;
   }
@@ -62,7 +62,7 @@ AmclNode::qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_det
 
   // If the robot has moved, update the filter
   if (camera_update_) {
-    updateFilter(laser_index, laser_scan, pose); // da modificare 
+    updateFilter(laser_index, qr_detection, pose); // da modificare 
 
     // Resample the particles
     if (!(++resample_count_ % resample_interval_)) {
@@ -84,8 +84,8 @@ AmclNode::qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_det
     int max_weight_hyp = -1;
     if (getMaxWeightHyp(hyps, max_weight_hyps, max_weight_hyp)) { // non da modificare
       
-      publishAmclPose(/*MODIFICATO*/qr_detection, /*OK*/hyps, /*OK*/max_weight_hyp); // la funzione non va cambiata ma va cambiato il tipo di laser_scan, che da solo il time stamp
-      calculateMaptoOdomTransform(/*MODIFICATO*/laser_scan, /*OK*/hyps, /*OK*/max_weight_hyp); // idem come sopra
+      publishAmclPose(/*MODIFICATO*/qr_detection->header.stamp, /*OK*/hyps, /*OK*/max_weight_hyp); // la funzione non va cambiata ma va cambiato il tipo di laser_scan, che da solo il time stamp
+      calculateMaptoOdomTransform(/*MODIFICATO*/qr_detection->header.stamp, /*OK*/hyps, /*OK*/max_weight_hyp); // idem come sopra
 
       if (tf_broadcast_ == true) {
         // We want to send a transform that is good up until a

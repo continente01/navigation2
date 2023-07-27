@@ -29,6 +29,11 @@ QrModel::sensorFunction(CameraData * data, pf_sample_set_t * set)
 {
   //determinare che tipo di funzione usare
   //deve ritornare il peso totale del set
+  double x,y,yaw;
+  //queste sono quelle del qr
+  x = data.qr_position.translation.x;
+  y = data.qr_position.translation.y;
+  yaw = tf2::getYaw(data.qr_position.orientation);
   return 0; // MODIFICA 
 }
 
