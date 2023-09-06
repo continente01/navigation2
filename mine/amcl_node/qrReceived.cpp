@@ -31,7 +31,7 @@ AmclNode::qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_det
 
   // Where was the robot when this scan was taken?
   pf_vector_t pose;
-  if (!getOdomPose( //non da cambiare
+  if (!getOdomPose( 
       latest_odom_pose_, pose.v[0], pose.v[1], pose.v[2],
       qr_detection->header.stamp, base_frame_id_))
   {
