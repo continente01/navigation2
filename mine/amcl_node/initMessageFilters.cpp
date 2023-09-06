@@ -7,8 +7,9 @@ std::unique_ptr<tf2_ros::MessageFilter<geometry_msgs::msg::TransformStamped>> qr
 
 message_filters::Connection qr_detection_connection_;
 
-std::string qr_topic_{"camera_link_position"}; //questo è scritto considerando all'interno del pacchetto il node my_node creato per la prima attività delle misure
-                                                //con il qr code
+std::string qr_topic_{"tf"}; /*detections*/  // la parte commentata è una variante in cui c'è la covariance calcolata da apriltag ma c'è
+                                              //discrepanze tra il messaggio del topic e il messaggio descritto dalla documentazione
+                                                
 
 //cpp
 
@@ -35,11 +36,11 @@ AmclNode::initMessageFilters()
 
 // PARTE AGGIUNTA
 
-  qr_detection_sub_ = std::make_unique<message_filters::Subscriber<geometry_msgs::msg::TransformStamped,
+  qr_detection_sub_ = std::make_unique<message_filters::Subscriber<geometry_msgs::msg::TransformStamped/*apriltag_ros_msgs::msg::AprilTagDetectionArray*/,
       rclcpp_lifecycle::LifecycleNode>>(
     shared_from_this(), qr_topic_, rmw_qos_profile_sensor_data, sub_opt);
 
-  qr_detection_filter_ = std::make_unique<tf2_ros::MessageFilter<geometry_msgs::msg::TransformStamped>>(
+  qr_detection_filter_ = std::make_unique<tf2_ros::MessageFilter<geometry_msgs::msg::TransformStamped/*apriltag_ros_msgs::msg::AprilTagDetectionArray*/>>(
     *qr_detection_sub_, *tf_buffer_, odom_frame_id_, 10,
     get_node_logging_interface(),
     get_node_clock_interface(),

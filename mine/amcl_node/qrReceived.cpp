@@ -2,7 +2,10 @@
 rclcpp::Time last_qr_received_ts_;
 bool camera_update;
 
-void qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_detection);
+void qrReceived(/*apriltag_ros_msgs::msg::AprilTagDetectionArray*/geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_detection);
+
+// la parte commentata è una variante in cui c'è la covariance calcolata da apriltag ma c'è
+//discrepanze tra il messaggio del topic e il messaggio descritto dalla documentazione
 
 
 
@@ -13,7 +16,7 @@ void qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_detectio
 //cpp
 
 void
-AmclNode::qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_detection)
+AmclNode::qrReceived(/*apriltag_ros_msgs::msg::AprilTagDetectionArray*/geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_detection)
 {
   std::lock_guard<std::recursive_mutex> cfl(mutex_);
   // Since the sensor data is continually being published by the simulator or robot,
