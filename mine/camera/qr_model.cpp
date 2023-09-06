@@ -14,7 +14,7 @@ QrModel::QrModel(
   map_t * map)      
 : Camera(map) 
 {
-  //paramatri caratteristici del qr code necessari
+  //paramatri caratteristici del qr code necessari probabilmente aggiungere un id e lista di parametri
 } 
 
 // Determine the probability for the given pose
