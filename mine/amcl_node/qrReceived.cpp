@@ -54,7 +54,7 @@ AmclNode::qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_det
     // Set the camera update flag
     if (shouldUpdateFilter(pose, delta)) {  //controllo se il pf è da aggiornare, se lo è viene fatto in updateFilter
       camera_update_ =true;
-      motion_model_->odometryUpdate(pf_, pose, delta);// 
+      motion_model_->odometryUpdate(pf_, pose, delta);
     }
     force_update_ = false;
   }
@@ -62,7 +62,7 @@ AmclNode::qrReceived(geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_det
 
   // If the robot has moved, update the filter
   if (camera_update_) {
-    updateFilter(laser_index, qr_detection, pose); // da modificare 
+    updateFilter(qr_detection, pose); 
 
     // Resample the particles
     if (!(++resample_count_ % resample_interval_)) {

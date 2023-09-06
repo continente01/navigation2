@@ -7,7 +7,8 @@ std::unique_ptr<tf2_ros::MessageFilter<geometry_msgs::msg::TransformStamped>> qr
 
 message_filters::Connection qr_detection_connection_;
 
-std::string qr_topic_{"tf"}; 
+std::string qr_topic_{"camera_link_position"}; //questo è scritto considerando all'interno del pacchetto il node my_node creato per la prima attività delle misure
+                                                //con il qr code
 
 //cpp
 

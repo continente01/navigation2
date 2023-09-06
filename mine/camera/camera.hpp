@@ -74,15 +74,17 @@ public:
   geometry_msgs::msg::Transform camera_to_qr_transform;
 };
 
-class QrModel : public Camera   //                           **SICURAMENTE DA TOGLIERE O MODIFICARE, CONTROLLA DOVE USATO**
+class QrModel : public Camera                            
 {
 public:
   /*
    * @brief QrModel constructor
    */
-  QrModel(
-    double z_hit, double z_short, double z_max, double z_rand, double sigma_hit,
-    double lambda_short, double chi_outlier, size_t max_beams, map_t * map); //da aggiungere parametri a seconda di quelli necessari
+  QrModel(  /*in questo caso forse anche possibile non utilizzare un'altra classe, possibile utilizzarla per dividere
+            e specificare le caratteristiche del qr code, ma necessario definire parametri fissi di esso*/
+
+     //geometry_msgs::msg::Transform * camera_to_qr_transform, 
+     map_t * map); 
 
   /*
    * @brief Run a sensor update on Camera

@@ -10,18 +10,12 @@ namespace nav2_amcl
 {
 
 QrModel::QrModel(
-  double z_hit, double z_short, double z_max, double z_rand, double sigma_hit,
-  double lambda_short, double chi_outlier, size_t max_beams, map_t * map)      //capire che parametri sono necessari
-: Camera(map) //trovare modo di convertire i beam in coordinate della camera
+  //geometry_msgs::msg::Transform * camera_to_qr_transform, 
+  map_t * map)      
+: Camera(map) 
 {
-  z_hit_ = z_hit; // sono tutti parametri fissi informazioni per il robot
-  z_rand_ = z_rand;
-  sigma_hit_ = sigma_hit;
-  z_short_ = z_short;
-  z_max_ = z_max;
-  lambda_short_ = lambda_short;
-  chi_outlier_ = chi_outlier;
-} // probabilmente da aggiungere quelli del qr code
+  //paramatri caratteristici del qr code necessari
+} 
 
 // Determine the probability for the given pose
 double
@@ -32,7 +26,7 @@ QrModel::sensorFunction(CameraData * data, pf_sample_set_t * set)
 
   //dei qr code basta x,y,yaw -> pf_vector_t 
   //da definire i parametri qr_positions[]
-  //pero ora tratto il singolo qr_position
+  //però ora tratto il singolo qr_position
 
   pf_vector_t base_position;
   base_position[0] = data.camera_to_qr_transform.translation.x+qr_position[0];
@@ -50,7 +44,7 @@ QrModel::sensorFunction(CameraData * data, pf_sample_set_t * set)
   base_position[2] += tf2::getYaw(camera_base_transform.orientation);
   
 
-  //calcolo dei pesi
+  //calcolo dei pesi per il particle filter
 
 
   return 0; // MODIFICA 

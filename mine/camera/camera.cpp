@@ -25,7 +25,7 @@ Camera::~Camera() //distruttore
 }
 
 void
-Camera::reallocTempData(int new_max_samples, int new_max_obs) //DA CONTROLLARE FUNZIONAMENTO
+Camera::reallocTempData(int new_max_samples, int new_max_obs) //viene usata solo in likelihood_field_model_prob, possibile eliminarla per la camera
 {
   if (temp_obs_) { //elimina la matrice
     for (int k = 0; k < max_samples_; k++) {
