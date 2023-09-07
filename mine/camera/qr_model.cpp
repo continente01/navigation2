@@ -16,19 +16,12 @@ QrModel::QrModel(
   map_t * map)      
 : Camera(map) 
 {
-  //paramatri caratteristici del qr code necessari probabilmente aggiungere un id e lista di parametri
 } 
 
 // Determine the probability for the given pose
 double
 QrModel::sensorFunction(CameraData * data, pf_sample_set_t * set)
 {
-  //determinare che tipo di funzione usare
-  //deve ritornare il peso totale del set
-
-  
-  //da definire i parametri qr_positions[]
-  //però ora tratto il singolo qr_position
   pf_sample_t * sample;
   pf_vector_t sample_pose;
   pf_vector_t camera_position;
@@ -41,9 +34,9 @@ QrModel::sensorFunction(CameraData * data, pf_sample_set_t * set)
   Eigen::MatrixXd covariance_m(3,3);
   Eigen::VectorXd pose_v(3), sample_v(3);
 
-  camera_position[0] = data.camera_to_qr_transform.translation.x+qr_position[0];
-  camera_position[1] = data.camera_to_qr_transform.translation.y+qr_position[1];
-  camera_position[2] = tf2::getYaw(data.camera_to_qr_transform.orientation)+qr_position[2];
+  camera_position[0] = data.camera_to_qr_transform.translation.x+data->qr_positions_[data->qr_frame_id][0];
+  camera_position[1] = data.camera_to_qr_transform.translation.y+qr_positions_[data->qr_frame_id][1];
+  camera_position[2] = tf2::getYaw(data.camera_to_qr_transform.orientation)+qr_positions_[data->qr_frame_id][2];
   
   try {
     geometry_msgs::msg::TransformStamped camera_base_transform =

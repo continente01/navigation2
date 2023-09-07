@@ -4,8 +4,8 @@ bool camera_update;
 
 void qrReceived(/*apriltag_ros_msgs::msg::AprilTagDetectionArray*/geometry_msgs::msg::TransformStamped::ConstSharedPtr qr_detection);
 
-// la parte commentata è una variante in cui c'è la covariance calcolata da apriltag ma c'è
-//discrepanze tra il messaggio del topic e il messaggio descritto dalla documentazione
+// la parte commentata è una variante in cui c'è una confidenza calcolata da apriltag ma c'è
+// discrepanze tra il messaggio del topic e il messaggio descritto dalla documentazione, per sicurezza nonn viene utilizzato
 
 
 
@@ -29,7 +29,8 @@ AmclNode::qrReceived(/*apriltag_ros_msgs::msg::AprilTagDetectionArray*/geometry_
     }
     return;
   }
-  std::string qr_detection_frame_id = nav2_util::strip_leading_slash(qr_detection->header.frame_id);
+  
+  std::string qr_frame_id = nav2_util::strip_leading_slash(qr_detection->child_frame_id);            //nome del qr code
   last_qr_received_ts_ = now();
 
   // Where was the robot when this scan was taken?
@@ -44,9 +45,9 @@ AmclNode::qrReceived(/*apriltag_ros_msgs::msg::AprilTagDetectionArray*/geometry_
 
   pf_vector_t delta = pf_vector_zero();
   bool force_publication = false;
-  if (!pf_init_) {              //se il pf non è inizializzato 
+  if (!pf_init_) {              
     // Pose at last filter update
-    pf_odom_pose_ = pose;       //imposto la pf_odom_pose in pose(x,y,yam ottenuta da getOdomPose)
+    pf_odom_pose_ = pose;       
 
     pf_init_ = true;
     camera_update_ =true;
@@ -55,7 +56,7 @@ AmclNode::qrReceived(/*apriltag_ros_msgs::msg::AprilTagDetectionArray*/geometry_
   }
   else {                           //se il pf è già inizializzato
     // Set the camera update flag
-    if (shouldUpdateFilter(pose, delta)) {  //controllo se il pf è da aggiornare, se lo è viene fatto in updateFilter
+    if (shouldUpdateFilter(pose, delta)) {  
       camera_update_ =true;
       motion_model_->odometryUpdate(pf_, pose, delta);
     }
@@ -65,7 +66,7 @@ AmclNode::qrReceived(/*apriltag_ros_msgs::msg::AprilTagDetectionArray*/geometry_
 
   // If the robot has moved, update the filter
   if (camera_update_) {
-    updateFilter(qr_detection, pose); 
+    updateFilter(qr_detection, pose); /*MODIFICATO*/
 
     // Resample the particles
     if (!(++resample_count_ % resample_interval_)) {

@@ -7,8 +7,8 @@ std::unique_ptr<tf2_ros::MessageFilter<geometry_msgs::msg::TransformStamped>> qr
 
 message_filters::Connection qr_detection_connection_;
 
-std::string qr_topic_{"tf"}; /*detections*/  // la parte commentata è una variante in cui c'è la covariance calcolata da apriltag ma c'è
-                                              //discrepanze tra il messaggio del topic e il messaggio descritto dalla documentazione
+std::string qr_topic_{"tf"}; /*detections*/  // la parte commentata è una variante in cui c'è una confidenza calcolata da apriltag ma c'è
+                                            // discrepanze tra il messaggio del topic e il messaggio descritto dalla documentazione, per sicurezza nonn viene utilizzato  
                                                 
 
 //cpp

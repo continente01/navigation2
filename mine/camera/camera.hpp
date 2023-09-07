@@ -37,17 +37,13 @@ public:
   void SetCameraPose(pf_vector_t & camera_pose);
 
 protected:
-  //nel dubbio metti tutto public poi si vede
-  double z_hit_;    //GUARDA A COSA SERVE vanno cambiati a seconda di quello che serve per la camera
-  double z_rand_;
-  double sigma_hit_;
-
 
   /*
    * @brief Reallocate weights
    * @param max_samples Max number of samples
    * @param max_obs number of observations
    */
+
   void reallocTempData(int max_samples, int max_obs);
   map_t * map_;
   pf_vector_t camera_pose_;
@@ -59,19 +55,33 @@ protected:
 class CameraData
 {
 public:
-  //Camera * camera;  //essendoi una sola camera non dovrebbe essere necessario
+  //Camera * camera;  //essendouna sola camera non dovrebbe essere necessario
 
   /*
    * @brief CameraData constructor
    */
-  CameraData() {camera_to_qr_transform=NULL;}
+
+  CameraData() {
+    camera_to_qr_transform=NULL; 
+    qr_frame_id = NULL;
+    qr_positions_["lavagna"] = {0.0,0.0,0.0};
+    qr_positions_["tag"] = {1.0,2.0,0.0}
+
+  }
   /*
    * @brief CameraData destructor
    */
-  virtual ~CameraData() {delete camera_to_qr_transform}
+  virtual ~CameraData() {
+    delete camera_to_qr_transform;
+    delete qr_frame_id;
+    delete qr_positions_;
+  }
 
 public:
   geometry_msgs::msg::Transform camera_to_qr_transform;
+  std::string qr_frame_id;
+  std::map<std::string, std::array<double,3>> qr_positions_;
+  
 };
 
 class QrModel : public Camera                            
@@ -80,11 +90,7 @@ public:
   /*
    * @brief QrModel constructor
    */
-  QrModel(  /*in questo caso forse anche possibile non utilizzare un'altra classe, possibile utilizzarla per dividere
-            e specificare le caratteristiche del qr code, ma necessario definire parametri fissi di esso*/
-
-     //geometry_msgs::msg::Transform * camera_to_qr_transform, 
-     map_t * map); 
+  QrModel(map_t * map); 
 
   /*
    * @brief Run a sensor update on Camera
