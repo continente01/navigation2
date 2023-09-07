@@ -7,7 +7,7 @@
    * @brief Publish robot pose in map frame from AMCL
    */
 void publishAmclPose(
-    const rclcpp::Time & sensor_timestamp,
+    const rclcpp::Time & sensor_timestamp,/*MODIFICATO*/
     const std::vector<amcl_hyp_t> & hyps, const int & max_weight_hyp);
 
 
@@ -15,7 +15,7 @@ void publishAmclPose(
 
 void
 AmclNode::publishAmclPose(
-  const rclcpp::Time & sensor_timestamp,
+  const rclcpp::Time & sensor_timestamp,/*MODIFICATO*/
   const std::vector<amcl_hyp_t> & hyps, const int & max_weight_hyp)
 {
   // If initial pose is not known, AMCL does not know the current pose
@@ -32,7 +32,7 @@ AmclNode::publishAmclPose(
   auto p = std::make_unique<geometry_msgs::msg::PoseWithCovarianceStamped>();
   // Fill in the header
   p->header.frame_id = global_frame_id_;
-  p->header.stamp = sensor_timestamp;
+  p->header.stamp = sensor_timestamp;   /*MODIFICATO*/
   // Copy in the pose
   p->pose.pose.position.x = hyps[max_weight_hyp].pf_pose_mean.v[0];
   p->pose.pose.position.y = hyps[max_weight_hyp].pf_pose_mean.v[1];

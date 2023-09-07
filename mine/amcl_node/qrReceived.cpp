@@ -69,7 +69,7 @@ AmclNode::qrReceived(/*apriltag_ros_msgs::msg::AprilTagDetectionArray*/geometry_
 
     // Resample the particles
     if (!(++resample_count_ % resample_interval_)) {
-      pf_update_resample(pf_, reinterpret_cast<void *>(map_)); //non da modificare
+      pf_update_resample(pf_, reinterpret_cast<void *>(map_)); 
       resampled = true;
     }
 
@@ -85,9 +85,9 @@ AmclNode::qrReceived(/*apriltag_ros_msgs::msg::AprilTagDetectionArray*/geometry_
     amcl_hyp_t max_weight_hyps;
     std::vector<amcl_hyp_t> hyps; //ipotesi
     int max_weight_hyp = -1;
-    if (getMaxWeightHyp(hyps, max_weight_hyps, max_weight_hyp)) { // non da modificare
+    if (getMaxWeightHyp(hyps, max_weight_hyps, max_weight_hyp)) { 
       
-      publishAmclPose(/*MODIFICATO*/qr_detection->header.stamp, /*OK*/hyps, /*OK*/max_weight_hyp); // la funzione non va cambiata ma va cambiato il tipo di laser_scan, che da solo il time stamp
+      publishAmclPose(/*MODIFICATO*/qr_detection->header.stamp, /*OK*/hyps, /*OK*/max_weight_hyp); // modifica del primo parametro, che necessita solo del time stamp
       calculateMaptoOdomTransform(/*MODIFICATO*/qr_detection->header.stamp, /*OK*/hyps, /*OK*/max_weight_hyp); // idem come sopra
 
       if (tf_broadcast_ == true) {

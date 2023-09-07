@@ -8,7 +8,7 @@
    * @brief Determine TF transformation from map to odom
    */
 void calculateMaptoOdomTransform(
-    const rclcpp::Time & sensor_timestamp,,
+    const rclcpp::Time & sensor_timestamp,/*MODIFICATO*/
     const std::vector<amcl_hyp_t> & hyps,
     const int & max_weight_hyp);
 
@@ -17,7 +17,7 @@ void calculateMaptoOdomTransform(
 
 void
 AmclNode::calculateMaptoOdomTransform(
-  const rclcpp::Time & sensor_timestamp,
+  const rclcpp::Time & sensor_timestamp, /*MODIFICATO*/
   const std::vector<amcl_hyp_t> & hyps, const int & max_weight_hyp)
 {
   // subtracting base to odom from map to base and send map to odom instead
@@ -32,7 +32,7 @@ AmclNode::calculateMaptoOdomTransform(
 
     geometry_msgs::msg::PoseStamped tmp_tf_stamped;
     tmp_tf_stamped.header.frame_id = base_frame_id_;
-    tmp_tf_stamped.header.stamp = sensor_timestamp;
+    tmp_tf_stamped.header.stamp = sensor_timestamp; /*MODIFICATO*/
     tf2::toMsg(tmp_tf.inverse(), tmp_tf_stamped.pose);
 
     tf_buffer_->transform(tmp_tf_stamped, odom_to_map, odom_frame_id_);

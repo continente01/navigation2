@@ -34,7 +34,7 @@ AmclNode::initMessageFilters()
       this, std::placeholders::_1));
 
 
-// PARTE AGGIUNTA
+// PARTE AGGIUNTA, subscriber e gestione messaggi per la camera
 
   qr_detection_sub_ = std::make_unique<message_filters::Subscriber<geometry_msgs::msg::TransformStamped/*apriltag_ros_msgs::msg::AprilTagDetectionArray*/,
       rclcpp_lifecycle::LifecycleNode>>(
