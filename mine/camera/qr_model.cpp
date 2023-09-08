@@ -26,7 +26,6 @@ QrModel::sensorFunction(CameraData * data, pf_sample_set_t * set)
   pf_vector_t sample_pose;
   pf_vector_t camera_position;
   pf_vector_t base_position;
-  pf_matrix_t sample_covariance;
   double total_weight;
   total_weight = 0.0;
 
@@ -54,18 +53,31 @@ QrModel::sensorFunction(CameraData * data, pf_sample_set_t * set)
   for(int i=0; i<3;i++)
     pose_v(i)=base_position[i];
 
+  /*assegnazione della matrice di covarianza, o di valore di affidabilità della posizione della camera
+  apriltag fornisce un valore di affifabilità nel messaggio trasmesso sul topic /detections, per utilizzarlo però è necessario cambiare tutta la gestione 
+  dei tipi delle variabili. qui assegno un valore di varianza proporzionale solo alla distanza, indicativo e solo d'esempio*/
+  
+  for(int i=0; i<3;i++){
+      for(int j=0; j<3;j++){
+        if(i==j)
+          covariance_m(i)(j)=0.15*base_position[0];
+    
+        else
+          covariance_m(i)(j)=0; 
+      }
+        
+  }
+
+
   for (int a = 0; a < set->sample_count; a++) { //iterazione dei sample
     sample = set->samples + a;
     sample_pose = sample->pose;
-    sample_covariance = sample->cov;
+    
 
     for(int i=0; i<3;i++)
       sample_v(i)=sample_pose[i];
     
-    for(int i=0; i<3;i++){
-      for(int j=0; j<3;j++)
-        covariance_m(i)(j)=sample_covariance[i][j];
-    }
+    
     
     /* calcolo attraverso formula con matrice di covarianza presente in https://www.mdpi.com/1424-8220/20/11/3145 */
 
