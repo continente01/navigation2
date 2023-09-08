@@ -68,16 +68,12 @@ QrModel::sensorFunction(CameraData * data, pf_sample_set_t * set)
         
   }
 
-
   for (int a = 0; a < set->sample_count; a++) { //iterazione dei sample
     sample = set->samples + a;
     sample_pose = sample->pose;
     
-
     for(int i=0; i<3;i++)
       sample_v(i)=sample_pose[i];
-    
-    
     
     /* calcolo attraverso formula con matrice di covarianza presente in https://www.mdpi.com/1424-8220/20/11/3145 */
 
