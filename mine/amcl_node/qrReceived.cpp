@@ -54,7 +54,7 @@ AmclNode::qrReceived(/*apriltag_ros_msgs::msg::AprilTagDetectionArray*/geometry_
     force_publication = true;
     resample_count_ = 0;
   }
-  else {                           //se il pf è già inizializzato
+  else {                           
     // Set the camera update flag
     if (shouldUpdateFilter(pose, delta)) {  
       camera_update_ =true;
